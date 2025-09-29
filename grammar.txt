@@ -1,0 +1,133 @@
+// DISCLAIMER: Given that the grammar requires the use of "є" and "э" characters, we will use the
+// character "ε" throughout the grammar to represent a "nothing" terminal. Please note the variation.
+
+
+<program> ::= <global_vars> <main> <functions>
+<program> ::= <global_vars> <functions> <main>
+<program> ::= <global_vars> <functions> <main> <functions>
+
+<global_vars> ::= ε
+<global_vars> ::= <global_var> <global_vars>
+
+<global_var> ::= "let" <type> <id> $
+<global_var> ::= "let" <type> <id> <array_decl> $
+<global_var> ::= "let" <type> <id> <init> $
+<global_var> ::= "let" <type> <id> <array_decl> <init> $
+
+<type> ::= "int" | "float" | "bool" | "char" | "string"
+<id> ::= [a-zA-Z_]([a-zA-Z_]|[0-9])*  // We use RegEx here because is too difficult without it.
+<array_decl> ::= [ <int> ]
+<init> ::= = <expr>
+
+
+// PRECEDENCE VALUES
+// Primary expressions (literals, variables, <function> calls, parentheses): 10
+// Increment/decrement expression: 9
+// Power expression: 8
+// Unary expression (unary minus, logical negation): 7
+// Multiplication, division, modulo: 6
+// Addition, subtraction: 5
+// High precedence relational expressions (>, >=, <, <=): 4
+// Low precedence relational expressions (==, !=): 3
+// Logical AND: 2
+// Logical OR: 1
+
+<expr> ::= <<or_expr>>
+
+<or_expr> ::= <or_expr> ~ and_expr
+<or_expr> ::= and_expr  // Links to next precedence level.
+
+<and_expr> ::= <and_expr> @ <lp_rel_expr>
+<and_expr> ::= <lp_rel_expr>
+
+<lp_rel_expr> ::= <hp_rel_expr> == <hp_rel_expr>
+<lp_rel_expr> ::= <hp_rel_expr> != <hp_rel_expr>
+<lp_rel_expr> ::= <hp_rel_expr>
+
+<hp_rel_expr> ::= <adit_expr> > <adit_expr>
+<hp_rel_expr> ::= <hp_rel_expr> >= <adit_expr>
+<hp_rel_expr> ::= <hp_rel_expr> < <adit_expr>
+<hp_rel_expr> ::= <hp_rel_expr> <= <adit_expr>
+<hp_rel_expr> ::= <adit_expr>
+<hp_rel_expr> ::= <logic_neg>
+<hp_rel_expr> ::= <bool> | <char> | <string> // This types can't be used further down in the grammar.
+
+<logic_neg> ::= "Σ" (<id> | <bool>)
+
+<adit_expr> ::= <adit_expr> + <mult_expr>
+<adit_expr> ::= <adit_expr> - <mult_expr>
+<adit_expr> ::= <mult_expr>
+
+<mult_expr> ::= <mult_expr> * <unary_minus>
+<mult_expr> ::= <mult_expr> / <unary_minus>
+<mult_expr> ::= <mult_expr> // <unary_minus>
+<mult_expr> ::= <mult_expr> % <unary_minus>
+<mult_expr> ::= <unary_minus>
+
+<unary_minus> ::= - <power_expr>
+
+<power_expr> ::= <power_expr> "^" <inc_dec_expr>
+<power_expr> ::= <inc_dec_expr>
+
+<inc_dec_expr> ::= <number> ++
+<inc_dec_expr> ::= <number> --
+<inc_dec_expr> ::= <number>
+
+<arithm_atom> ::= <int> | <float> | <id> | <function_call> | є <expr> э
+
+<int> ::= [1-9][0-9]*|0 // Negative numbers are interpreted as having a unary minus.
+<float> ::= <int> "." [0-9]*[1-9] // Same with negative floats.
+<bool> ::= true | false
+// Accepts, between single quotes, anything that is not a backslash or any of these: \', \", \n, \t o \r: 
+<char> ::= ' ([^\\]]|\['"ntr]) '
+<string> ::= " (char)* "
+
+// єэ
+<functions> ::= <function>
+<functions> ::= <function> <functions>
+<function> ::= <type> <id> є <params> э ¿ <code_block> ?
+
+<params> ::= <param>
+<params> ::= <param> "," <params>
+// opt_array_param es para parámetros como “<int> arr[10]”.
+<param> ::= <type> <id>
+<param> ::= <type> <id> <array_decl> // This is to allow arrays as parameters.
+
+<code_block> ::= <code_block_body> // A function can have no return value.
+<code_block> ::= <code_block_body> <code_block_return>
+
+<code_block_body> ::= ε // A function may have no instructions.
+<code_block_body> ::= (sentence | control_structure) <code_block_body>
+
+<sentence> ::= <var_creation> | <var_asignment> | <function_call> | <inputfn> | <outputfn>
+
+<var_creation> ::= let <type> <id> $
+<var_creation> ::= let <type> <id> <array_decl> $
+<var_creation> ::= let <type> 
+<var_creation> ::= let <type> <var_assignment>
+
+<var_assignment> ::= <id> <init> $
+<var_assignment> ::= <id> <array_decl> <init> $
+
+<function_call> ::= <id> є <params> э
+<inputfn> ::= let <type> <id> = input ɛ ɜ $
+<outputfn> ::= output ɛ <expr> ɜ $
+
+<control_structure> ::= <decide> | <loop> | <for>
+
+<decide> ::= decide of ( є <expr> э -> ¿ <code_block> ? )+
+             ( else -> ¿ <code_block> ? )? end decide $
+
+<loop> ::= loop ¿ <code_block> ? exit when <expr> $ end loop $
+
+<for> ::= for <var_asignment> step <int> to <expr> do ¿ <code_block> ?
+<for> ::= for <var_asignment> step <int> downto <expr> do ¿ <code_block> ?
+
+<code_block_return> ::= return <expr> $
+
+<main> ::= main є э ¿ <code_block> ?
+
+// Accepts anything but a newline until a newline appears.
+oneline_comment ::= "|" ([^\\n]*(\\n))
+// Accepts anything but a closing exclamation mark until one appears.
+multiline_comment ::= "¡" ([^!]*) "!"
