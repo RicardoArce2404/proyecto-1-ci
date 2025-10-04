@@ -12,6 +12,8 @@
 <global_var> ::= "let" <type> <id> <init> $
 <global_var> ::= "let" <type> <array_decl> <init> $
 
+<main> ::= "void" "principal" ¿ <code_block> ? $
+
 <type> ::= "int" | "float" | "bool" | "char" | "string"
 <id> ::= [a-zA-Z_]([a-zA-Z_]|[0-9])*  // We use RegEx here because is too difficult without it.
 <array_decl> ::= <id> [ <int> ]
@@ -50,7 +52,7 @@
 <hp_rel_expr> ::= <logic_neg>
 <hp_rel_expr> ::= <bool> | <char> | <string> // This types can't be used further down in the grammar.
 
-<logic_neg> ::= "Σ" <id>
+<logic_neg> ::= "Σ" <bool>
 
 <adit_expr> ::= <adit_expr> + <mult_expr>
 <adit_expr> ::= <adit_expr> - <mult_expr>
@@ -62,8 +64,10 @@
 <mult_expr> ::= <mult_expr> % <unary_minus>
 <mult_expr> ::= <unary_minus>
 
-<unary_minus> ::= - <id>
+<unary_minus> ::= - <literal_numbers>
 <unary_minus> ::= <power_expr>
+
+<literal_numbers> ::= <int> | <float>
 
 <power_expr> ::= <inc_dec_expr> "^" <inc_dec_expr>
 <power_expr> ::= <inc_dec_expr>
@@ -99,6 +103,12 @@
 
 <sentence> ::= <var_creation> | <var_asignment> | <function_call> | <inputfn> | <outputfn> | <code_block_return>
 
+<inputfn> ::= let <input_type> <id> = input є <input_value> э $
+<outputfn> ::= let <output_type> <id> = output є <output_value> э $
+
+<input_value> ::= <int> | <float> | <id> // Solo enteros, flotantes o variables de esos tipos
+<output_value> ::= <int> | <float> | <string> | <id> // Enteros, flotantes, strings o variables de esos tipos
+
 <var_creation> ::= let <type> <id> $
 <var_creation> ::= let <type> <array_decl> $
 <var_creation> ::= let <type> <var_assignment>
@@ -114,13 +124,21 @@
 
 <control_structure> ::= <decide> | <loop> | <for>
 
-<decide> ::= decide of ( є <expr> э -> ¿ <code_block> ? )+
-             ( else -> ¿ <code_block> ? )? end decide $
+<decide> ::= decide of <decide_options> <decide_else> end decide $
 
-<loop> ::= loop ¿ <code_block> ? exit when <expr> $ end loop $
+<decide_options> ::= <decide_option>
+<decide_options> ::= <decide_option> <decide_options>
+<decide_option> ::=  є <expr> э -> ¿ <cs_code_block> ? 
 
-<for> ::= for <var_asignment> step <int> to <expr> do ¿ <code_block> ?
-<for> ::= for <var_asignment> step <int> downto <expr> do ¿ <code_block> ?
+<decide_else> ::= else -> ¿ <cs_code_block> ? | ε
+
+<loop> ::= loop ¿ <cs_code_block> ? exit when <expr> $ end loop $
+
+<for> ::= for <var_asignment> step <int> to <expr> do ¿ <cs_code_block> ?
+<for> ::= for <var_asignment> step <int> downto <expr> do ¿ <cs_code_block> ?
+
+<cs_code_block> ::= <cs_code_block> <statement>
+<cs_code_block> ::= <statement>
 
 <code_block_return> ::= return <expr> $
 
