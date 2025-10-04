@@ -7,14 +7,14 @@
 <global_vars> ::= ε
 <global_vars> ::= <global_var> <global_vars>
 
-<global_var> ::= "let" <type> <id> $
-<global_var> ::= "let" <type> <array_decl> $
-<global_var> ::= "let" <type> <id> <init> $
-<global_var> ::= "let" <type> <array_decl> <init> $
+<global_var> ::= let <type> <id> $
+<global_var> ::= let <type> <array_decl> $
+<global_var> ::= let <type> <id> <init> $
+<global_var> ::= let <type> <array_decl> <init> $
 
-<main> ::= "void" "principal" ¿ <code_block> ? $
+<main> ::= void principal ¿ <code_block> ? $
 
-<type> ::= "int" | "float" | "bool" | "char" | "string"
+<type> ::= int | float | bool | char | string
 <id> ::= [a-zA-Z_]([a-zA-Z_]|[0-9])*  // We use RegEx here because is too difficult without it.
 <array_decl> ::= <id> [ <int> ]
 <init> ::= = <expr>
@@ -52,7 +52,7 @@
 <hp_rel_expr> ::= <logic_neg>
 <hp_rel_expr> ::= <bool> | <char> | <string> // This types can't be used further down in the grammar.
 
-<logic_neg> ::= "Σ" <bool>
+<logic_neg> ::= Σ <id>
 
 <adit_expr> ::= <adit_expr> + <mult_expr>
 <adit_expr> ::= <adit_expr> - <mult_expr>
@@ -69,7 +69,7 @@
 
 <literal_numbers> ::= <int> | <float>
 
-<power_expr> ::= <inc_dec_expr> "^" <inc_dec_expr>
+<power_expr> ::= <inc_dec_expr> ^ <inc_dec_expr>
 <power_expr> ::= <inc_dec_expr>
 
 <inc_dec_expr> ::= <id> ++
@@ -79,7 +79,7 @@
 <arithm_atom> ::= <int> | <float> | <id> | <function_call> | <array_decl> | є <expr> э
 
 <int> ::= [1-9][0-9]*|0 // Negative numbers are interpreted as having a unary minus.
-<float> ::= <int> "." [0-9]*[1-9] // Same with negative floats.
+<float> ::= <int> . [0-9]*[1-9] // Same with negative floats.
 <bool> ::= true | false
 // Accepts, between single quotes, anything that is not a backslash or any of these: \', \", \n, \t o \r: 
 <char> ::= ' ([^\\]]|\['"ntr]) '
@@ -93,7 +93,7 @@
 
 <params> ::= ε
 <params> ::= <param>
-<params> ::= <param> "," <params>
+<params> ::= <param> , <params>
 
 <param> ::= <type> <id>
 <param> ::= <type> <array_decl> // This is to allow arrays as parameters.
@@ -103,11 +103,10 @@
 
 <sentence> ::= <var_creation> | <var_asignment> | <function_call> | <inputfn> | <outputfn> | <code_block_return>
 
-<inputfn> ::= let <input_type> <id> = input є <input_value> э $
-<outputfn> ::= let <output_type> <id> = output є <output_value> э $
+<inputfn> ::= input є <id> э $
+<outputfn> ::= output є <output_value> э $
 
-<input_value> ::= <int> | <float> | <id> // Solo enteros, flotantes o variables de esos tipos
-<output_value> ::= <int> | <float> | <string> | <id> // Enteros, flotantes, strings o variables de esos tipos
+<output_value> ::= <int> | <float> | <string>// Enteros, flotantes, strings
 
 <var_creation> ::= let <type> <id> $
 <var_creation> ::= let <type> <array_decl> $
