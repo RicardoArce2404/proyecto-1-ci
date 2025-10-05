@@ -1,0 +1,97 @@
+package compilador;
+import java_cup.runtime.*;
+
+/* Código que se inserta al inicio del parser (main de prueba) */
+parser code { :
+  public static void main(String[] args) {
+    try {
+      java.io.Reader r = new java.io.FileReader("entrada.txt");
+      Lexer lexer = new Lexer(r);
+      Parser parser = new Parser(lexer);
+      parser.parse();
+      System.out.println("✅ Análisis sintáctico completado correctamente");
+    } catch (Throwable e) {
+      System.err.println("Error en el parseo: " + e.getMessage());
+      e.printStackTrace();
+    }
+  }
+: }
+
+/* Código de acción (vacío por ahora) */
+action code { :
+  // Helpers para acciones semánticas irían aquí.
+: }
+
+/* =========================
+   TERMINALES (deben coincidir con el Lexer)
+   ========================= */
+
+/* palabras reservadas y nombres básicos */
+terminal LET, INT, FLOAT, BOOL, CHAR, STRING, VOID, PRINCIPAL;
+terminal INPUT, OUTPUT, RETURN;
+terminal TRUE, FALSE;
+
+/* estructuras de control y palabras clave */
+terminal DECIDE, OF, ELSE, END, LOOP, EXIT, WHEN;
+terminal FOR, STEP, TO, DOWNTO, DO;
+
+/* literales y identificadores */
+terminal ID, INT_LIT, FLOAT_LIT, CHAR_LIT, STRING_LIT;
+
+/* símbolos especiales y delimitadores */
+terminal DOLLAR;               // $
+terminal LPAREN, RPAREN;       // є  э (paréntesis especiales)
+terminal LBLOCK, RBLOCK;       // ¿  ? (bloque delimiters)
+terminal LBRACKET, RBRACKET;   // [ ]
+terminal COMMA;                // ,
+terminal ARROW;                // ->
+
+/* operadores aritméticos, incremento, etc. */
+terminal PLUS, MINUS, MULT, DIV, DIVINT, MOD, POW;
+terminal INC, DEC;             // ++, --
+terminal ASSIGN;               // =
+
+/* comparadores */
+terminal EQ, NEQ, GT, GE, LT, LE;
+
+/* lógicos */
+terminal AND, OR, SIGMA;       // @ ~ Σ
+
+/* NOTA: No declarar EOF (CUP lo maneja internamente) */
+
+/* =========================
+   PRECEDENCIA Y ASOCIATIVIDAD
+   ========================= */
+precedence left OR;
+precedence left AND;
+precedence left EQ, NEQ;
+precedence left LT, GT, LE, GE;
+precedence left PLUS, MINUS;
+precedence left MULT, DIV, DIVINT, MOD;
+precedence right POW;
+
+/* =========================
+   NO TERMINALES
+   ========================= */
+non terminal program;
+non terminal global_vars, global_var;
+non terminal functions, function, params, param;
+non terminal type_nt, array_decl, init_nt;
+
+non terminal expr, or_expr, and_expr, lp_rel_expr, hp_rel_expr;
+non terminal logic_neg, adit_expr, mult_expr, unary_minus;
+non terminal literal_numbers, power_expr, inc_dec_expr, arithm_atom;
+
+non terminal code_block, statement, sentence, control_structure;
+non terminal var_creation, var_assignment, function_call, literal_params;
+non terminal inputfn, outputfn, output_value, code_block_return;
+
+non terminal decide, decide_options, decide_option, decide_else;
+non terminal loop_nt, for_nt, cs_code_block;
+
+/* Símbolo inicial */
+start with program;
+
+/* =========================
+   PRODUCCIONES
+   ========================= */
