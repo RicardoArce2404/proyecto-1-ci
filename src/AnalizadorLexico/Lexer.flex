@@ -1,5 +1,6 @@
 import java_cup.runtime.Symbol;
 
+
 %%
 
 %class Lexer
@@ -8,6 +9,10 @@ import java_cup.runtime.Symbol;
 %line
 %column
 %public
+%state STRING
+%{
+    private StringBuilder string_lit;
+%}
 
 // Palabras reservadas
 let         = "let"
@@ -31,6 +36,7 @@ false       = "false"
 id          = [a-zA-Z_][a-zA-Z0-9_]*
 int_lit     = [1-9][0-9]* | 0
 float_lit   = [1-9][0-9]*"."[0-9]*[1-9]
+
 
 // Espacios y saltos de línea
 espacio     = [ \t\r\n]+
@@ -93,6 +99,19 @@ comentario_multi = "¡"([^!])*"!"
 {id}                     { return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
 {int_lit}                { return new Symbol(sym.INT_LIT, yyline, yycolumn, yytext()); }
 {float_lit}              { return new Symbol(sym.FLOAT_LIT, yyline, yycolumn, yytext()); }
+\" { string_lit = new StringBuilder(); yybegin(STRING); }
+
+// Reglas para procesar el contenido del literal de cadena
+<STRING> {
+    [^\n\r\"\\]+   { string_lit.append(yytext()); }
+    \\t            { string_lit.append('\t'); }
+    \\n            { string_lit.append('\n'); }
+    \\r            { string_lit.append('\r'); }
+    \\\"           { string_lit.append('\"'); }
+    \\\\           { string_lit.append('\\'); }
+    \"             { yybegin(YYINITIAL); return new Symbol(sym.STRING_LIT, yyline, yycolumn, string_lit.toString()); }
+    \n|\r          { System.err.println("Cadena sin cerrar en línea " + yyline); yybegin(YYINITIAL); }
+}
 
 // Operadores y símbolos
 {sigma}                  { return new Symbol(sym.SIGMA, yyline, yycolumn, yytext()); }
