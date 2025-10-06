@@ -1,26 +1,4 @@
-package compilador;
 import java_cup.runtime.*;
-
-/* Código que se inserta al inicio del parser (main de prueba) */
-parser code { :
-  public static void main(String[] args) {
-    try {
-      java.io.Reader r = new java.io.FileReader("entrada.txt");
-      Lexer lexer = new Lexer(r);
-      Parser parser = new Parser(lexer);
-      parser.parse();
-      System.out.println("✅ Análisis sintáctico completado correctamente");
-    } catch (Throwable e) {
-      System.err.println("Error en el parseo: " + e.getMessage());
-      e.printStackTrace();
-    }
-  }
-: }
-
-/* Código de acción (vacío por ahora) */
-action code { :
-  // Helpers para acciones semánticas irían aquí.
-: }
 
 /* =========================
    TERMINALES (deben coincidir con el Lexer)
@@ -60,17 +38,6 @@ terminal AND, OR, SIGMA;       // @ ~ Σ
 /* NOTA: No declarar EOF (CUP lo maneja internamente) */
 
 /* =========================
-   PRECEDENCIA Y ASOCIATIVIDAD
-   ========================= */
-precedence left OR;
-precedence left AND;
-precedence left EQ, NEQ;
-precedence left LT, GT, LE, GE;
-precedence left PLUS, MINUS;
-precedence left MULT, DIV, DIVINT, MOD;
-precedence right POW;
-
-/* =========================
    NO TERMINALES
    ========================= */
 non terminal program;
@@ -89,9 +56,22 @@ non terminal inputfn, outputfn, output_value, code_block_return;
 non terminal decide, decide_options, decide_option, decide_else;
 non terminal loop_nt, for_nt, cs_code_block;
 
-/* Símbolo inicial */
-start with program;
+/* =========================
+   PRECEDENCIA Y ASOCIATIVIDAD
+   ========================= */
+
+precedence left OR;
+precedence left AND;
+precedence left EQ, NEQ;
+precedence left LT, GT, LE, GE;
+precedence left PLUS, MINUS;
+precedence left MULT, DIV, DIVINT, MOD;
+precedence right POW;
 
 /* =========================
    PRODUCCIONES
    ========================= */
+
+/* Símbolo inicial */
+start with program;
+program ::= ID;

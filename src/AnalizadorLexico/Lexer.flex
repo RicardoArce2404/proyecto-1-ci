@@ -1,5 +1,3 @@
-package compilador;
-
 import java_cup.runtime.Symbol;
 
 %%
@@ -47,7 +45,7 @@ rblock      = "?"
 assign      = "="
 plus        = "+"
 minus       = "-"
-times       = "*"
+mult       = "*"
 div         = "/"
 mod         = "%"
 power       = "^"
@@ -106,10 +104,10 @@ comentario_multi = "¡"([^!])*"!"
 {assign}                 { return new Symbol(sym.ASSIGN, yyline, yycolumn, yytext()); }
 {plus}                   { return new Symbol(sym.PLUS, yyline, yycolumn, yytext()); }
 {minus}                  { return new Symbol(sym.MINUS, yyline, yycolumn, yytext()); }
-{times}                  { return new Symbol(sym.TIMES, yyline, yycolumn, yytext()); }
+{mult}                  { return new Symbol(sym.MULT, yyline, yycolumn, yytext()); }
 {div}                    { return new Symbol(sym.DIV, yyline, yycolumn, yytext()); }
 {mod}                    { return new Symbol(sym.MOD, yyline, yycolumn, yytext()); }
-{power}                  { return new Symbol(sym.POWER, yyline, yycolumn, yytext()); }
+{power}                  { return new Symbol(sym.POW, yyline, yycolumn, yytext()); }
 {and}                    { return new Symbol(sym.AND, yyline, yycolumn, yytext()); }
 {or}                     { return new Symbol(sym.OR, yyline, yycolumn, yytext()); }
 {eq}                     { return new Symbol(sym.EQ, yyline, yycolumn, yytext()); }
