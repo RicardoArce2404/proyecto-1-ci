@@ -1,1 +1,17 @@
- hola
+let int x$
+
+float suma є int a, int b э ¿
+    return a + b $
+?
+$
+
+¡Otra funcion!
+
+int resta є int a, int b э ¿
+    return a - b $
+?
+$
+
+void principal ¿
+?
+$

@@ -75,7 +75,7 @@ precedence right POW;
 /* Símbolo inicial */
 start with program;
 
-program ::= global_vars functions main;
+program ::= global_vars functions main ;
 
 global_vars ::= global_var global_vars | ; // Intentionally left empty.
 
@@ -139,10 +139,9 @@ arithm_atom ::= INT_LIT | FLOAT_LIT | ID
               | function_call | array_decl
               | LPAREN expr RPAREN ;
 
-functions ::= function functions
-            | ; // May be no functions.
+functions ::= function functions | ; // May be no functions.
 
-function ::= type_nt ID LPAREN params RPAREN LBLOCK code_block RBLOCK ;
+function ::= type_nt ID LPAREN params RPAREN LBLOCK code_block RBLOCK DOLLAR ;
 
 params ::= param
          | param COMMA params

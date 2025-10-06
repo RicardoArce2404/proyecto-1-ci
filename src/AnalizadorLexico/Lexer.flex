@@ -11,7 +11,14 @@ import java_cup.runtime.Symbol;
 %public
 %state STRING
 %{
-    private StringBuilder string_lit;
+      StringBuffer string = new StringBuffer();
+
+      private Symbol symbol(int type) {
+        return new Symbol(type, yyline, yycolumn);
+      }
+      private Symbol symbol(int type, Object value) {
+        return new Symbol(type, yyline, yycolumn, value);
+      }
 %}
 
 // Palabras reservadas
@@ -31,11 +38,21 @@ decide      = "decide"
 else        = "else"
 true        = "true"
 false       = "false"
+void        = "void"
+of          = "of"
+end         = "end"
+exit        = "exit"
+when        = "when"
+step        = "step"
+to          = "to"
+downto      = "downto"
+do          = "do"
 
 // Identificadores y literales
 id          = [a-zA-Z_][a-zA-Z0-9_]*
 int_lit     = [1-9][0-9]* | 0
 float_lit   = [1-9][0-9]*"."[0-9]*[1-9]
+char_lit = \'([^'\\]|\\[nrt'\\])\'
 
 
 // Espacios y saltos de línea
@@ -43,9 +60,9 @@ espacio     = [ \t\r\n]+
 
 // Símbolos
 sigma       = "Σ"
-dollar      = "\\$"
-lparen      = "є"
-rparen      = "э"
+dollar      = "$"
+lparen      = \u0454      // є
+rparen      = \u044d      // э
 lblock      = "¿"
 rblock      = "?"
 assign      = "="
@@ -65,6 +82,11 @@ ge          = ">="
 le          = "<="
 comma       = ","
 arrow       = "->"
+lbracket    = "\\["
+rbracket    = "\\]"
+divint      = "//"
+inc         = "\\+\\+"
+dec         = "--"
 
 // Comentarios
 comentario_linea = "\\|".*
@@ -94,23 +116,37 @@ comentario_multi = "¡"([^!])*"!"
 {else}                   { return new Symbol(sym.ELSE, yyline, yycolumn, yytext()); }
 {true}                   { return new Symbol(sym.TRUE, yyline, yycolumn, yytext()); }
 {false}                  { return new Symbol(sym.FALSE, yyline, yycolumn, yytext()); }
+{void}      { return new Symbol(sym.VOID, yyline, yycolumn, yytext()); }
+{of}        { return new Symbol(sym.OF, yyline, yycolumn, yytext()); }
+{end}       { return new Symbol(sym.END, yyline, yycolumn, yytext()); }
+{exit}      { return new Symbol(sym.EXIT, yyline, yycolumn, yytext()); }
+{when}      { return new Symbol(sym.WHEN, yyline, yycolumn, yytext()); }
+{step}      { return new Symbol(sym.STEP, yyline, yycolumn, yytext()); }
+{to}        { return new Symbol(sym.TO, yyline, yycolumn, yytext()); }
+{downto}    { return new Symbol(sym.DOWNTO, yyline, yycolumn, yytext()); }
+{do}        { return new Symbol(sym.DO, yyline, yycolumn, yytext()); }
 
 // Identificadores y literales
+\"  { string.setLength(0); yybegin(STRING); }
+<STRING> {
+      \"                             { yybegin(YYINITIAL); 
+                                       return symbol(sym.STRING_LIT, 
+                                       string.toString()); }
+      [^\n\r\"\\]+                   { string.append( yytext() ); }
+      \\t                            { string.append('\t'); }
+      \\n                            { string.append('\n'); }
+
+      \\r                            { string.append('\r'); }
+      \\\"                           { string.append('\"'); }
+      \\                             { string.append('\\'); }
+    }
+
 {id}                     { return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
 {int_lit}                { return new Symbol(sym.INT_LIT, yyline, yycolumn, yytext()); }
 {float_lit}              { return new Symbol(sym.FLOAT_LIT, yyline, yycolumn, yytext()); }
-\" { string_lit = new StringBuilder(); yybegin(STRING); }
-
-// Reglas para procesar el contenido del literal de cadena
-<STRING> {
-    [^\n\r\"\\]+   { string_lit.append(yytext()); }
-    \\t            { string_lit.append('\t'); }
-    \\n            { string_lit.append('\n'); }
-    \\r            { string_lit.append('\r'); }
-    \\\"           { string_lit.append('\"'); }
-    \\\\           { string_lit.append('\\'); }
-    \"             { yybegin(YYINITIAL); return new Symbol(sym.STRING_LIT, yyline, yycolumn, string_lit.toString()); }
-    \n|\r          { System.err.println("Cadena sin cerrar en línea " + yyline); yybegin(YYINITIAL); }
+{char_lit} { 
+    String valor = yytext().substring(1, yytext().length()-1); // quita las comillas
+    return new Symbol(sym.CHAR_LIT, yyline, yycolumn, valor); 
 }
 
 // Operadores y símbolos
@@ -137,5 +173,11 @@ comentario_multi = "¡"([^!])*"!"
 {le}                     { return new Symbol(sym.LE, yyline, yycolumn, yytext()); }
 {comma}                  { return new Symbol(sym.COMMA, yyline, yycolumn, yytext()); }
 {arrow}                  { return new Symbol(sym.ARROW, yyline, yycolumn, yytext()); }
+{lbracket}  { return new Symbol(sym.LBRACKET, yyline, yycolumn, yytext()); }
+{rbracket}  { return new Symbol(sym.RBRACKET, yyline, yycolumn, yytext()); }
+{divint}    { return new Symbol(sym.DIVINT, yyline, yycolumn, yytext()); }
+{inc}       { return new Symbol(sym.INC, yyline, yycolumn, yytext()); }
+{dec}       { return new Symbol(sym.DEC, yyline, yycolumn, yytext()); }
 
-.                        { System.err.println("Símbolo no reconocido: " + yytext() + " en línea " + yyline); }
+. { System.err.println("Token desconocido: " + yytext() + " (codepoint " + (int)yytext().charAt(0) + ")"); }
+
