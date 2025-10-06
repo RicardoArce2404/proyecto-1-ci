@@ -2,7 +2,7 @@
 // character "ε" throughout the grammar to represent a "nothing" terminal. Please note the variation.
 
 
-<program> ::= <global_vars> <functions>
+<program> ::= <global_vars> <functions> <main>
 
 <global_vars> ::= ε
 <global_vars> ::= <global_var> <global_vars>

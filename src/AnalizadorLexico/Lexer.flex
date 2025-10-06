@@ -29,8 +29,8 @@ false       = "false"
 
 // Identificadores y literales
 id          = [a-zA-Z_][a-zA-Z0-9_]*
-int_lit     = [0-9]+
-float_lit   = [0-9]+"."[0-9]+
+int_lit     = [1-9][0-9]* | 0
+float_lit   = [1-9][0-9]*"."[0-9]*[1-9]
 
 // Espacios y saltos de línea
 espacio     = [ \t\r\n]+
