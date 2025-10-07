@@ -156,7 +156,7 @@ code_block ::= code_block statement | ; // Empty code block.
 
 statement ::= sentence | control_structure ;
 
-sentence ::= var_creation | var_assignment | function_call | inputfn | outputfn | code_block_return ;
+sentence ::= var_creation | var_assignment | function_call |ID INC DOLLAR| ID DEC DOLLAR | inputfn | outputfn | code_block_return ;
 
 inputfn ::= INPUT LPAREN ID RPAREN DOLLAR ;
 
@@ -187,7 +187,7 @@ decide_option ::= LPAREN expr RPAREN ARROW LBLOCK cs_code_block RBLOCK ;
 
 decide_else ::= ELSE ARROW LBLOCK cs_code_block RBLOCK | ; // May be no else clause.
 
-loop_nt ::= LOOP LBLOCK cs_code_block RBLOCK EXIT WHEN expr DOLLAR END LOOP DOLLAR ;
+loop_nt ::= LOOP cs_code_block EXIT WHEN expr DOLLAR END LOOP DOLLAR ;
 
 for_nt ::= FOR var_assignment STEP INT_LIT TO expr DO LBLOCK cs_code_block RBLOCK
          | FOR var_assignment STEP INT_LIT DOWNTO expr DO LBLOCK cs_code_block RBLOCK ;

@@ -48,8 +48,6 @@ to          = "to"
 downto      = "downto"
 do          = "do"
 
-\. { System.err.println("Error: Punto decimal mal ubicado en línea " + yyline); }
-
 // Identificadores y literales
 id          = [a-zA-Z_][a-zA-Z0-9_]*
 int_lit     = [1-9][0-9]* | 0
@@ -87,11 +85,11 @@ arrow       = "->"
 lbracket    = "["
 rbracket    = "]"
 divint      = "//"
-inc         = "\\+\\+"
+inc         = "++"
 dec         = "--"
 
 // Comentarios
-comentario_linea = "\\|".*
+comentario_linea = "|".*
 comentario_multi = "¡"([^!])*"!"
 
 // Ignorar espacios y comentarios
@@ -152,6 +150,8 @@ comentario_multi = "¡"([^!])*"!"
 }
 
 // Operadores y símbolos
+{inc}       { return new Symbol(sym.INC, yyline, yycolumn, yytext()); }
+{dec}       { return new Symbol(sym.DEC, yyline, yycolumn, yytext()); }
 {sigma}                  { return new Symbol(sym.SIGMA, yyline, yycolumn, yytext()); }
 {dollar}                 { return new Symbol(sym.DOLLAR, yyline, yycolumn, yytext()); }
 {lparen}                 { return new Symbol(sym.LPAREN, yyline, yycolumn, yytext()); }
@@ -178,8 +178,6 @@ comentario_multi = "¡"([^!])*"!"
 {lbracket}  { return new Symbol(sym.LBRACKET, yyline, yycolumn, yytext()); }
 {rbracket}  { return new Symbol(sym.RBRACKET, yyline, yycolumn, yytext()); }
 {divint}    { return new Symbol(sym.DIVINT, yyline, yycolumn, yytext()); }
-{inc}       { return new Symbol(sym.INC, yyline, yycolumn, yytext()); }
-{dec}       { return new Symbol(sym.DEC, yyline, yycolumn, yytext()); }
 
 . { System.err.println("Token desconocido: " + yytext() + " (codepoint " + (int)yytext().charAt(0) + ")"); }
 

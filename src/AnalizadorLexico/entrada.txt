@@ -1,17 +1,13 @@
-let int global = 100$
-
-int duplicar є int num э ¿
-    return num * 2$
+int factorial є int n э ¿
+    decide of є n == 0 э -> ¿
+        return 1$
+    ? else -> ¿
+        return n * factorial є n - 1 э$
+    ? end decide$
 ?$
 
 void principal ¿
-    let int a = 5$
-    let int b = 10$
-    
-    let int suma = є a + b э$
-    let int resultado = duplicar є suma э$
-    
-    output є global э $
+    let int num = 5$
+    let int resultado = factorial є num э$
     output є resultado э $
-    output є 42 э $
 ?$
