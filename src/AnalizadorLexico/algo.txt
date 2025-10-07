@@ -1,0 +1,6 @@
+
+# Current token is #27 ID
+# Current token is #39 COMMA
+# Current token is #27 ID
+# Current token is #34 CIERRE PAREN
+# Current token is #32 DOLLAR

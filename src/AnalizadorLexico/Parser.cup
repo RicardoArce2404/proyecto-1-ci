@@ -156,7 +156,7 @@ code_block ::= code_block statement | ; // Empty code block.
 
 statement ::= sentence | control_structure ;
 
-sentence ::= var_creation | var_assignment | function_call |ID INC DOLLAR| ID DEC DOLLAR | inputfn | outputfn | code_block_return ;
+sentence ::= var_creation | var_assignment | function_call DOLLAR |ID INC DOLLAR| ID DEC DOLLAR | inputfn | outputfn | code_block_return ;
 
 inputfn ::= INPUT LPAREN ID RPAREN DOLLAR ;
 
@@ -174,7 +174,7 @@ var_assignment ::= ID init_nt DOLLAR
 function_call ::= ID LPAREN literal_params RPAREN ;
 
 literal_params ::= expr
-                 | expr COMMA literal_params ;
+                 | literal_params COMMA expr;
 
 control_structure ::= decide | loop_nt | for_nt ;
 
