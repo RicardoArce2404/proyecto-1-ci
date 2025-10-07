@@ -10,4 +10,10 @@ void principal ¿
     let int num = 5.2$
     let int resultado = factorial є num э$
     output є resultado э $
+    for i = 0 $ step 1 downto 2 * 4 do
+    ¿
+        output є resultado э $
+        output є resultado э $
+        output є resultado э $
+    ?
 ?$
