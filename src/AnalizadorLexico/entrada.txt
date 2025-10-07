@@ -1,42 +1,26 @@
-let int MAX_CALIFICACION = 100$
-let int MIN_APROBATORIO = 60$
-let string INSTITUCION = "Universidad Nacional"$
-
-string evaluarEstudiante є int calificacion, int asistencias э ¿
-    ¡Evaluación completa del estudiante!
-    decide of є calificacion >= MIN_APROBATORIO @ asistencias >= 80 э -> ¿
-        return "APROBADO"$
-    ? else -> ¿
-        return "REPROBADO"$
-    ? end decide$
-?$
-
-void mostrarInfoEstudiante є string nombre, int edad, string resultado э ¿
-    output є INSTITUCION э $
+void contadoresAnidados є э ¿
+    let int externo = 1$
+    
+    loop
+        let int interno = 1$
+        output є "Externo:" э $
+        output є externo э $
+        
+        loop 
+            output є "  Interno:" э $
+            output є interno э $
+            let int producto = externo * interno$
+            output є "  Producto:" э $
+            output є producto э $
+            interno++$
+            exit when interno > 3$
+        end loop$
+        
+        externo++$
+        exit when externo > 3$
+    end loop$
 ?$
 
 void principal ¿
-    ¡Programa principal!
-    let string nombre_estudiante = "Carlos Pérez"$
-    let int edad_estudiante = 20$
-    let int calificacion_final = 85$
-    let int porcentaje_asistencia = 90$
-    
-    ¡Procesar estudiante!
-    let string resultado = evaluarEstudiante є calificacion_final, porcentaje_asistencia э$
-    
-    ¡Mostrar información!
-    mostrarInfoEstudiante є nombre_estudiante, edad_estudiante, resultado э$
-    
-    ¡Comentario final!
-    output є "Proceso completado" э $
-    let int num = 5.2$
-    let int resultado = factorial є num э$
-    output є resultado э $
-    for i = 0 $ step 1 downto 2 * 4 do
-    ¿
-        output є resultado э $
-        output є resultado э $
-        output є resultado э $
-    ?
+    contadoresAnidados є э$
 ?$
