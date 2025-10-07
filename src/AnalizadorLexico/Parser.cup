@@ -1,5 +1,16 @@
 import java_cup.runtime.*;
 
+parser code {:
+    public void report_error(String message, Object info) {
+        Symbol s = (Symbol) info;
+        System.err.println("Syntax error at line " + s.left + ", column " + s.right + ": " + message);
+    }
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1); // or throw new RuntimeException(message);
+    }
+:};
+
 /* =========================
    TERMINALES
    ========================= */
