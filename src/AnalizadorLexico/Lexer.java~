@@ -399,13 +399,37 @@ public class Lexer implements java_cup.runtime.Scanner {
   private boolean zzEOFDone;
 
   /* user code: */
-      StringBuffer string_lit = new StringBuffer();
-      private Symbol symbol(int type) {
+    StringBuffer string_lit = new StringBuffer();
+    private TablaSimbolos tablaSimbolos;
+    private ManejadorErrores manejadorErrores;
+    
+    private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
-      }
-      private Symbol symbol(int type, Object value) {
+    }
+    
+    private Symbol symbol(int type, Object value) {
         return new Symbol(type, yyline, yycolumn, value);
-      }
+    }
+    
+    public void setTablaSimbolos(TablaSimbolos tabla) {
+        this.tablaSimbolos = tabla;
+    }
+    
+    public void setManejadorErrores(ManejadorErrores manejador) {
+        this.manejadorErrores = manejador;
+    }
+    
+    private boolean esPalabraReservada(String texto) {
+        return texto.equals("let") || texto.equals("int") || texto.equals("float") || 
+               texto.equals("bool") || texto.equals("char") || texto.equals("string") ||
+               texto.equals("for") || texto.equals("return") || texto.equals("input") ||
+               texto.equals("output") || texto.equals("principal") || texto.equals("loop") ||
+               texto.equals("decide") || texto.equals("else") || texto.equals("true") ||
+               texto.equals("false") || texto.equals("void") || texto.equals("of") ||
+               texto.equals("end") || texto.equals("exit") || texto.equals("when") ||
+               texto.equals("step") || texto.equals("to") || texto.equals("downto") ||
+               texto.equals("do");
+    }
 
 
   /**
@@ -832,7 +856,12 @@ public class Lexer implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { System.err.println("Token desconocido: " + yytext() + " (codepoint " + (int)yytext().charAt(0) + ")");
+            { String errorMsg = "Carácter no válido: '" + yytext() + "'";
+    if (manejadorErrores != null) {
+        manejadorErrores.agregarErrorLexico(errorMsg, yyline, yycolumn);
+    } else {
+        System.err.println("ERROR LÉXICO [Línea " + (yyline + 1) + ", Columna " + (yycolumn + 1) + "]: " + errorMsg);
+    }
             }
           // fall through
           case 69: break;
@@ -882,7 +911,10 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 78: break;
           case 11:
-            { return new Symbol(sym.INT_LIT, yyline, yycolumn, yytext());
+            { if (tablaSimbolos != null) {
+            tablaSimbolos.agregarSimbolo("int_" + yytext(), "int", "literal", yyline + 1, yytext());
+        }
+        return new Symbol(sym.INT_LIT, yyline, yycolumn, yytext());
             }
           // fall through
           case 79: break;
@@ -912,7 +944,10 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 84: break;
           case 17:
-            { return new Symbol(sym.ID, yyline, yycolumn, yytext());
+            { if (tablaSimbolos != null && !esPalabraReservada(yytext())) {
+            tablaSimbolos.agregarSimbolo(yytext(), "por determinar", "identificador", yyline + 1);
+        }
+        return new Symbol(sym.ID, yyline, yycolumn, yytext());
             }
           // fall through
           case 85: break;
@@ -967,7 +1002,12 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 95: break;
           case 28:
-            { yybegin(YYINITIAL); return symbol(sym.STRING_LIT, string_lit.toString());
+            { yybegin(YYINITIAL); 
+        String valor = string_lit.toString();
+        if (tablaSimbolos != null) {
+            tablaSimbolos.agregarSimbolo("string_literal", "string", "literal", yyline + 1, "\"" + valor + "\"");
+        }
+        return symbol(sym.STRING_LIT, valor);
             }
           // fall through
           case 96: break;
@@ -997,7 +1037,10 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 101: break;
           case 34:
-            { return new Symbol(sym.FLOAT_LIT, yyline, yycolumn, yytext());
+            { if (tablaSimbolos != null) {
+            tablaSimbolos.agregarSimbolo("float_" + yytext(), "float", "literal", yyline + 1, yytext());
+        }
+        return new Symbol(sym.FLOAT_LIT, yyline, yycolumn, yytext());
             }
           // fall through
           case 102: break;
@@ -1057,8 +1100,11 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 113: break;
           case 46:
-            { String valor = yytext().substring(1, yytext().length()-1); // quita las comillas
-    return new Symbol(sym.CHAR_LIT, yyline, yycolumn, valor);
+            { String valor = yytext().substring(1, yytext().length()-1);
+        if (tablaSimbolos != null) {
+            tablaSimbolos.agregarSimbolo("char_" + valor, "char", "literal", yyline + 1, "'" + valor + "'");
+        }
+        return new Symbol(sym.CHAR_LIT, yyline, yycolumn, valor);
             }
           // fall through
           case 114: break;
@@ -1113,7 +1159,8 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 124: break;
           case 57:
-            { return new Symbol(sym.TRUE, yyline, yycolumn, yytext());
+            { if (tablaSimbolos != null) tablaSimbolos.agregarSimbolo("true_literal", "bool", "literal", yyline + 1, "true");
+        return new Symbol(sym.TRUE, yyline, yycolumn, yytext());
             }
           // fall through
           case 125: break;
@@ -1128,7 +1175,8 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 127: break;
           case 60:
-            { return new Symbol(sym.FALSE, yyline, yycolumn, yytext());
+            { if (tablaSimbolos != null) tablaSimbolos.agregarSimbolo("false_literal", "bool", "literal", yyline + 1, "false");
+        return new Symbol(sym.FALSE, yyline, yycolumn, yytext());
             }
           // fall through
           case 128: break;

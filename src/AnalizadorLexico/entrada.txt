@@ -1,35 +1,16 @@
-int buscarNumero є int objetivo, int arreglo[5] э ¿
-    let int posicion = -1$
-    let int indice = 0$
-    
-    loop
-        decide of є arreglo[indice] == objetivo э -> ¿
-            posicion = indice$
-            return posicion$
-        ? else -> ¿
-            posicion=0
-        ? end decide$
-        
-        indice++$
-        exit when indice >= 5$
-    end loop$
-    
-    return posicion$
+let int GLOBAL = 100$
+
+int suma є int a, int b э ¿
+    return a + b$
+?$
+
+int multiplicar є int a, int b э ¿
+    return a * b$
 ?$
 
 void principal ¿
-    let int numeros[5]$
-    numeros[0] = 10$
-    numeros[1] = 25$
-    numeros[2] = 30$
-    numeros[3] = 15$
-    numeros[4] = 40$
-    
-    let int objetivo = 30$
-    let int encontrado = buscarNumero є objetivo, numeros э$
-    
-    output є "Buscando:" э $
-    output є objetivo э $
-    output є "Encontrado en posición:" э $
-    output є encontrado э $
+    let int resultado1 = suma є 3, 4 э$
+    let int resultado2 = multiplicar є 3, 4 э$
+    output є resultado1 э $
+    output є resultado2 э $
 ?$

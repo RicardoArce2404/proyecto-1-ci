@@ -1,0 +1,13 @@
+=== RESULTADO DEL ANÁLISIS ===
+
+ESTADO: CORRECTO
+MENSAJE: El archivo SÍ puede ser generado por la gramática
+
+=== ESTADÍSTICAS ===
+Errores léxicos/sintácticos: 0
+Archivos generados:
+  - tokens.txt: Lista de todos los tokens encontrados
+  - tabla_simbolos.txt: Tabla de símbolos identificados
+  - errores.txt: Reporte detallado de errores
+  - resultado_analisis.txt: Este archivo de resultados
+El programa es sintácticamente correcto y puede ser procesado.

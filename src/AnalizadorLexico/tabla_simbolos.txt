@@ -1,0 +1,15 @@
+=== TABLA DE SÍMBOLOS ===
+Nombre		Tipo		Categoría		Línea	Valor
+------------------------------------------------------------
+GLOBAL      	por determinar	identificador		1	-
+a           	por determinar	identificador		3	-
+b           	por determinar	identificador		3	-
+int_100     	int       	literal     		1	100
+int_3       	int       	literal     		12	3
+int_4       	int       	literal     		12	4
+multiplicar 	por determinar	identificador		7	-
+resultado1  	por determinar	identificador		12	-
+resultado2  	por determinar	identificador		13	-
+suma        	por determinar	identificador		3	-
+
+Total de símbolos: 10

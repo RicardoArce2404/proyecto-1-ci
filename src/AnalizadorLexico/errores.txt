@@ -1,0 +1,5 @@
+=== REPORTE DE ERRORES ===
+Tipo		Línea	Columna	Mensaje
+----------------------------------------
+
+Total de errores: 0
