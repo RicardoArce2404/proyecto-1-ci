@@ -48,7 +48,7 @@ do          = "do"
 
 // Identificadores y literales
 id        = [a-zA-Z_][a-zA-Z0-9_]*
-int_lit   = [1-9][0-9]* | 0
+int_lit   = [1-9][0-9]*|0
 float_lit = ([0-9]+"."[0-9]*)|([0-9]*"."[0-9]+)
 char_lit  = \'([^'\\]|\\[nrt'\\])\'
 
