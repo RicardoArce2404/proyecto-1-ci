@@ -1,29 +1,35 @@
-void acumuladorComplejo є э ¿
-    let int suma_total = 0$
-    let int producto_total = 1$
-   
-    for i = 1$ step 1 to 5 do ¿
-        suma_total = suma_total + i$
-        output є "i:" э $
-        output є i э $
-        output є "Suma acumulada:" э $
-        output є suma_total э $
-    ?
+int buscarNumero є int objetivo, int arreglo[5] э ¿
+    let int posicion = -1$
+    let int indice = 0$
     
-    for j = 2$ step 2 to 10 do ¿
-        producto_total = producto_total * j$
-        output є "j:" э $
-        output є j э $
-        output є "Producto acumulado:" э $
-        output є producto_total э $
-    ?
+    loop
+        decide of є arreglo[indice] == objetivo э -> ¿
+            posicion = indice$
+            return posicion$
+        ? else -> ¿
+            posicion=0
+        ? end decide$
+        
+        indice++$
+        exit when indice >= 5$
+    end loop$
     
-    output є "Resultado final - Suma:" э $
-    output є suma_total э $
-    output є "Resultado final - Producto:" э $
-    output є producto_total э $
+    return posicion$
 ?$
 
 void principal ¿
-    acumuladorComplejo є э$
+    let int numeros[5]$
+    numeros[0] = 10$
+    numeros[1] = 25$
+    numeros[2] = 30$
+    numeros[3] = 15$
+    numeros[4] = 40$
+    
+    let int objetivo = 30$
+    let int encontrado = buscarNumero є objetivo, numeros э$
+    
+    output є "Buscando:" э $
+    output є objetivo э $
+    output є "Encontrado en posición:" э $
+    output є encontrado э $
 ?$
