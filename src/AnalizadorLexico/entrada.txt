@@ -2,12 +2,12 @@ int factorial є int n э ¿
     decide of є n == 0 э -> ¿
         return 1$
     ? else -> ¿
-        return n * factorial є n - 1 э$
+        return n * factorial є 'a' э$
     ? end decide$
 ?$
 
 void principal ¿
-    let int num = 5$
+    let int num = 5.2$
     let int resultado = factorial є num э$
     output є resultado э $
 ?$

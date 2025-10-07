@@ -24,7 +24,7 @@ public class Main {
             parser p = new parser(lexer);
             
             
-            p.debug_parse();
+            p.parse();
             System.out.println("CORRECTO: Análisis completado");
             
         } catch (Exception e) {

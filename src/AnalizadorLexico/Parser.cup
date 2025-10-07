@@ -173,8 +173,8 @@ var_assignment ::= ID init_nt DOLLAR
 
 function_call ::= ID LPAREN literal_params RPAREN ;
 
-literal_params ::= arithm_atom
-                 | arithm_atom COMMA literal_params ;
+literal_params ::= expr
+                 | expr COMMA literal_params ;
 
 control_structure ::= decide | loop_nt | for_nt ;
 
