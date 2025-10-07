@@ -178,7 +178,7 @@ literal_params ::= expr
 
 control_structure ::= decide | loop_nt | for_nt ;
 
-decide ::= DECIDE OF decide_options decide_else END DECIDE DOLLAR ;
+decide ::= DECIDE OF decide_options decide_else END DECIDE ;
 
 decide_options ::= decide_option
                  | decide_option decide_options ;
@@ -187,7 +187,7 @@ decide_option ::= LPAREN expr RPAREN ARROW LBLOCK cs_code_block RBLOCK ;
 
 decide_else ::= ELSE ARROW LBLOCK cs_code_block RBLOCK | ; // May be no else clause.
 
-loop_nt ::= LOOP cs_code_block EXIT WHEN expr DOLLAR END LOOP DOLLAR ;
+loop_nt ::= LOOP cs_code_block EXIT WHEN expr DOLLAR END LOOP ;
 
 for_nt ::= FOR var_assignment STEP INT_LIT TO expr DO LBLOCK cs_code_block RBLOCK
          | FOR var_assignment STEP INT_LIT DOWNTO expr DO LBLOCK cs_code_block RBLOCK ;
