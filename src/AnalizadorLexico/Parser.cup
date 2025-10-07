@@ -43,7 +43,7 @@ terminal AND, OR, SIGMA;       // @ ~ Σ
 non terminal program;
 non terminal global_vars, global_var;
 non terminal functions, function, params, param, main;
-non terminal type_nt, array_decl, init_nt;
+non terminal type_nt,type_fn, array_decl, init_nt;
 
 non terminal expr, or_expr, and_expr, lp_rel_expr, hp_rel_expr;
 non terminal logic_neg, adit_expr, mult_expr, unary_minus;
@@ -139,9 +139,11 @@ arithm_atom ::= INT_LIT | FLOAT_LIT | ID
               | function_call | array_decl
               | LPAREN expr RPAREN ;
 
-functions ::= function functions | ; // May be no functions.
+functions ::= functions function | ; // May be no functions.
 
-function ::= type_nt ID LPAREN params RPAREN LBLOCK code_block RBLOCK DOLLAR ;
+function ::= type_fn ID LPAREN params RPAREN LBLOCK code_block RBLOCK DOLLAR;
+
+type_fn ::= type_nt | VOID ;
 
 params ::= param
          | param COMMA params
@@ -160,7 +162,7 @@ inputfn ::= INPUT LPAREN ID RPAREN DOLLAR ;
 
 outputfn ::= OUTPUT LPAREN output_value RPAREN DOLLAR ;
 
-output_value ::= INT_LIT | FLOAT_LIT | STRING_LIT ;
+output_value ::= INT_LIT | FLOAT_LIT | STRING_LIT | ID ;
 
 var_creation ::= LET type_nt ID DOLLAR
                | LET type_nt array_decl DOLLAR

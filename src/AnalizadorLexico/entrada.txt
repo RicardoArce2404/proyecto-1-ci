@@ -1,17 +1,17 @@
-let int x$
+let int global = 100$
 
-float suma є int a, int b э ¿
-    return a + b $
-?
-$
-
-¡Otra funcion!
-
-int resta є int a, int b э ¿
-    return a - b $
-?
-$
+int duplicar є int num э ¿
+    return num * 2$
+?$
 
 void principal ¿
-?
-$
+    let int a = 5$
+    let int b = 10$
+    
+    let int suma = є a + b э$
+    let int resultado = duplicar є suma э$
+    
+    output є global э $
+    output є resultado э $
+    output є 42 э $
+?$

@@ -11,7 +11,7 @@ import java_cup.runtime.Symbol;
 %public
 %state STRING
 %{
-      StringBuffer string = new StringBuffer();
+      StringBuffer string_lit = new StringBuffer();
 
       private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
@@ -48,10 +48,12 @@ to          = "to"
 downto      = "downto"
 do          = "do"
 
+\. { System.err.println("Error: Punto decimal mal ubicado en línea " + yyline); }
+
 // Identificadores y literales
 id          = [a-zA-Z_][a-zA-Z0-9_]*
 int_lit     = [1-9][0-9]* | 0
-float_lit   = [1-9][0-9]*"."[0-9]*[1-9]
+float_lit   = ([0-9]+"."[0-9]*)|([0-9]*"."[0-9]+)
 char_lit = \'([^'\\]|\\[nrt'\\])\'
 
 
@@ -82,8 +84,8 @@ ge          = ">="
 le          = "<="
 comma       = ","
 arrow       = "->"
-lbracket    = "\\["
-rbracket    = "\\]"
+lbracket    = "["
+rbracket    = "]"
 divint      = "//"
 inc         = "\\+\\+"
 dec         = "--"
@@ -101,8 +103,8 @@ comentario_multi = "¡"([^!])*"!"
 
 // Palabras reservadas
 {let}                    { return new Symbol(sym.LET, yyline, yycolumn, yytext()); }
-{int}                    { return new Symbol(sym.INT, yyline, yycolumn, yytext()); }
 {float}                  { return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
+{int}                    { return new Symbol(sym.INT, yyline, yycolumn, yytext()); }
 {bool}                   { return new Symbol(sym.BOOL, yyline, yycolumn, yytext()); }
 {char}                   { return new Symbol(sym.CHAR, yyline, yycolumn, yytext()); }
 {string}                 { return new Symbol(sym.STRING, yyline, yycolumn, yytext()); }
@@ -127,18 +129,18 @@ comentario_multi = "¡"([^!])*"!"
 {do}        { return new Symbol(sym.DO, yyline, yycolumn, yytext()); }
 
 // Identificadores y literales
-\"  { string.setLength(0); yybegin(STRING); }
+\"  { string_lit.setLength(0); yybegin(STRING); }
 <STRING> {
       \"                             { yybegin(YYINITIAL); 
                                        return symbol(sym.STRING_LIT, 
-                                       string.toString()); }
-      [^\n\r\"\\]+                   { string.append( yytext() ); }
-      \\t                            { string.append('\t'); }
-      \\n                            { string.append('\n'); }
+                                       string_lit.toString()); }
+      [^\n\r\"\\]+                   { string_lit.append( yytext() ); }
+      \\t                            { string_lit.append('\t'); }
+      \\n                            { string_lit.append('\n'); }
 
-      \\r                            { string.append('\r'); }
-      \\\"                           { string.append('\"'); }
-      \\                             { string.append('\\'); }
+      \\r                            { string_lit.append('\r'); }
+      \\\"                           { string_lit.append('\"'); }
+      \\                             { string_lit.append('\\'); }
     }
 
 {id}                     { return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
